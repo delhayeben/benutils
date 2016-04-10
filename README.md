@@ -1,2 +1,2 @@
 # benutils
-Various helpfull matlab scripts
+Various helpful matlab scripts
