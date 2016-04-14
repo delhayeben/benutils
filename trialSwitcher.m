@@ -58,18 +58,17 @@ if(nargin<5), screen=0;end
 
 % adds sliders
 nslider=length(ntrials);
-idxlabel=cell(nslider,1); % label the current trial number
 for ii=1:nslider
-    uicontrol('sty','slider','call',{@callbckfun,ii},...
+    slidh(ii)=uicontrol('sty','slider','call',{@callbckfun,ii},...
         'pos',[(ii-1)*270+70 3 160 15],...
         'min',1,'max',ntrials(ii),'val',curr_state(ii),...
         'sliderstep',[1/(ntrials(ii)-1) 3/(ntrials(ii)-1)]);
     uicontrol('sty','text','string',name{ii},...
         'pos',[(ii-1)*270+0 5 70 15],...
         'fontsize',11);
-    idxlabel{ii}=uicontrol('sty','text','string',num2str(curr_state(ii)),...
-        'pos',[(ii-1)*270+230 5 35 15],...
-        'fontsize',11);
+    edith(ii)=uicontrol('sty','edit','string',num2str(curr_state(ii)),...
+        'pos',[(ii-1)*270+230 3 35 15],...
+        'fontsize',11,'call',{@callbckfun,ii});
 end
 
 % adds screenshot button
@@ -88,10 +87,19 @@ plotfun(curr_state);
 
 %% callbacks
 % slider callback
-    function callbckfun(source,~,slider_idx)
-        curr_state(slider_idx)=round(get(source,'Value'));
+    function callbckfun(source,~,id)
+        switch source.Style
+            case 'edit'
+                idx=str2double(source.String);
+                if(idx<1), idx=1; end
+                if(idx>ntrials(id)), idx=ntrials(id); end
+                curr_state(id)=idx;
+            case 'slider'
+                curr_state(id)=round(source.Value);
+        end
+        edith(id).String=num2str(curr_state(id));
+        slidh(id).Value=curr_state(id);
         plotfun(curr_state);
-        set(idxlabel{slider_idx},'str',num2str(curr_state(slider_idx)))
     end
 
 % screenshot callback
@@ -101,7 +109,7 @@ plotfun(curr_state);
         screenshot(2);
         
         savestates=curr_state;
-        str=get(figname,'string');
+        str=figname.String;
         if(~isempty(str))
             for jj=1:ntrials(1)
                 plotfun([jj curr_state(2:end)]);

@@ -86,8 +86,8 @@ if(~ishandle(flagorfig))
 end
 
 % hide all uicontrols (in case of GUI's)
-uic=findobj(gcf,'type','UIControl');
-%set(uic,'visible','off')
+uic=findobj(flagorfig,'type','UIControl');
+set(uic,'visible','off')
 
 % save figure properties
 figprop=get(flagorfig);
@@ -96,6 +96,8 @@ figprop=get(flagorfig);
 set(flagorfig,'PaperPositionMode','auto','Units','inches');
 pos=get(flagorfig,'pos');
 set(flagorfig,'PaperSize',[pos(3), pos(4)])
+set(flagorfig,'color','w') % set white background
+set(flagorfig,'InvertHardcopy','off') % keep all other visual porperties
 
 % print command depending on output format
 switch format
@@ -111,6 +113,8 @@ set(uic,'visible','on');
 set(flagorfig,'PaperPositionMode',figprop.PaperPositionMode)
 set(flagorfig,'Units',figprop.Units)
 set(flagorfig,'PaperSize',figprop.PaperSize)
+set(flagorfig,'color',figprop.Color)
+set(flagorfig,'InvertHardcopy',figprop.InvertHardcopy)
 
 disp(['SCREENSHOT SAVED : ' filnamwithoutext])
 
