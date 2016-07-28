@@ -49,17 +49,21 @@ if(nargout>0), hh=h; end
         
         % show text
         texth = text(bcoord(1),bcoord(2),str,...
-            'EdgeColor','k','BackgroundColor','w','VerticalA','bottom');
+            'EdgeColor','k','BackgroundColor',[1 1 1 .1],'VerticalA','bottom');
         
         % change linewidth and type
         % Fetch all curve properties
         linep = get(lineh);
-        % Remove read-only properties
-        linep = rmfield(linep,'Annotation');
-        linep = rmfield(linep,'BeingDeleted');
-        linep = rmfield(linep,'Type');
-        set(lineh,'Linewidth',2*linep.LineWidth,...
-            'MarkerSize',2*linep.MarkerSize);
+        
+        set(lineh,'Linewidth',2*linep.LineWidth);
+        
+        % depending on line type, double point size
+        if(isfield(linep,'MarkerSize')) % for
+            set(lineh,'MarkerSize',2*linep.MarkerSize)
+        else % for scatter plots
+            set(lineh,'SizeData',2*linep.SizeData,'MarkerFaceColor','flat',...
+                'MarkerEdgeColor','k')
+        end
         
         pointh=line(lineh.XData(pidx),lineh.YData(pidx),'Marker','o',...
             'MarkerEdgeColor','r','MarkerFaceColor','r','MarkerSize',9);
@@ -69,7 +73,15 @@ if(nargout>0), hh=h; end
     end
 
     function releasefun(~,~,texth,lineh,linep)
-        set(lineh,linep)
+        set(lineh,'Linewidth',linep.LineWidth)
+        % depending on line type, double point size
+        if(isfield(linep,'MarkerSize')) % for
+            set(lineh,'MarkerSize',linep.MarkerSize)
+        else % for scatter plots
+            set(lineh,'SizeData',linep.SizeData,...
+                'MarkerFaceColor',linep.MarkerFaceColor,...
+                'MarkerEdgeColor',linep.MarkerEdgeColor)
+        end
         delete(texth)
     end
 

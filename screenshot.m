@@ -18,6 +18,7 @@
 %  flag=0 => disables screenshots
 %  flag=1 => enables screenshots for 5 min (and then sets flag to 0)
 %  flag=2 => screenshot are always enabled (default behavior)
+%  flag=3 => switch status from 0 to 1 or 1 to 0
 % Flag status remains even after closing matlab
 
 function status=screenshot(flagorfig,filnamwithoutext,format)
@@ -36,6 +37,13 @@ if(nargin==1 && ~ischar(flagorfig))
         stop(glob_screenshottim)
         delete(glob_screenshottim)
         glob_screenshottim=[];
+    end
+    if(flagorfig==3)
+        if(glob_screenshotflag>0)
+            flagorfig=0;
+        else
+            flagorfig=1;
+        end
     end
     if(flagorfig==0)
         disp('Screenshots disabled')
