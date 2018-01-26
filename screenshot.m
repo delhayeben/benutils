@@ -104,20 +104,39 @@ figprop=get(flagorfig);
 set(flagorfig,'PaperPositionMode','auto','Units','inches');
 pos=get(flagorfig,'pos');
 set(flagorfig,'PaperSize',[pos(3), pos(4)])
-set(flagorfig,'color','w') % set white background
 set(flagorfig,'InvertHardcopy','off') % keep all other visual porperties
 
 % print command depending on output format
 switch format
-    case 'pdf', print(flagorfig,[filnamwithoutext '.pdf'],'-dpdf')
-    case 'png', print(flagorfig,[filnamwithoutext '.png'],'-dpng','-r300')
-    otherwise, disp('unknown format, abord...');
+    case 'pdf'
+        set(flagorfig,'color','none') % set trans background
+        hax=findobj(flagorfig,'type','axes');
+        col=get(hax,'color'); if(isnumeric(col)),col={col};end
+        set(hax(cellfun(@(x) isequal(x,[1 1 1]),col)),...
+            'color','none');
+        print(flagorfig,[filnamwithoutext '.pdf'],'-dpdf')
+    case 'png'
+        set(flagorfig,'color','w') % set white background
+        print(flagorfig,[filnamwithoutext '.png'],'-dpng','-r300')
+        
+        % if imagemagick installed, remove white background
+        [s,~]=system('where convert.exe');
+        if(~s)
+            file=[filnamwithoutext '.' format];
+            cmd=['convert ' filnamwithoutext ...
+                '.png -transparent white '...
+                filnamwithoutext  '.png'];
+            [~,~]=system(cmd);
+        end
+        
+    otherwise
+        disp('unknown format, abord...');
 end
 
 % show uicontrols back
 set(uic,'visible','on');
 
-% reset figure properties to normal (after removing read-only fields)
+% reset figure properties to normal
 set(flagorfig,'PaperPositionMode',figprop.PaperPositionMode)
 set(flagorfig,'Units',figprop.Units)
 set(flagorfig,'PaperSize',figprop.PaperSize)
@@ -125,5 +144,19 @@ set(flagorfig,'color',figprop.Color)
 set(flagorfig,'InvertHardcopy',figprop.InvertHardcopy)
 
 disp(['SCREENSHOT SAVED : ' filnamwithoutext])
+
+% add tag (if imagemagick installed)
+stack=dbstack(1);
+if(~isempty(stack) && strcmp('png',format))
+    orig_script=stack(1).file;
+    [s,~]=system('where convert.exe');
+    if(~s)
+        file=[filnamwithoutext '.' format];
+        cmd=['convert ' file ' -set tag: "' orig_script '" ' file];
+        [~,~]=system(cmd);
+        % you can read the tag using
+        % identify -format '"%[tag:]"\n' filename+ext
+    end
+end
 
 end

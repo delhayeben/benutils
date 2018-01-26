@@ -20,9 +20,9 @@ end
 x=varargin{1}(:);   varargin(1)=[];
 y=varargin{1};  varargin(1)=[];
 
-if(isempty(varargin) || isempty(varargin{1}))
+if(isempty(varargin) || isempty(varargin{1}) || ischar(varargin{1}))
     fun=@(x) deal(nanmean(x,2),nanstd(x,1,2));
-    if(~isempty(varargin))
+    if(~isempty(varargin) && ~ischar(varargin{1}))
         varargin(1)=[];
     end
 else
@@ -34,15 +34,16 @@ x=x(:);
 
 % remove nan
 nanlines=sum(isnan([x,ym,yv]),2)>0;
-x=x(~nanlines);ym=ym(~nanlines);yv=yv(~nanlines);
+x=x(~nanlines);
+ym=ym(~nanlines);
+yv=yv(~nanlines);
 
 getstatus=get(ax,'nextplot');
-
 hh=plot(ax,x,ym,varargin{:});
 set(ax,'nextplot','add')
 
 patch([x ; flipud(x)],[ym+yv;flipud(ym-yv)],hh.Color,...
-   'edgecolor','none','FaceAlpha',.3,'parent',ax)
+   'edgecolor','none','FaceAlpha',.2,'parent',ax)
 set(ax,'nextplot',getstatus,'box','off')
 
 if(nargout==1)

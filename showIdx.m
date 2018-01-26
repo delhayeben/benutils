@@ -26,7 +26,7 @@ if(nargin<2)
 end
 for ii=1:length(h)
     if(isempty(names{ii}))
-        names{ii}=cellstr(num2str((1:length(h(ii).XData))'));
+        names{ii}=cellstr(num2str((1:length(get(h(ii),'XData')))'));
     end
 end
 if(nargout>0), hh=h; end
@@ -45,7 +45,11 @@ if(nargout>0), hh=h; end
         else
             str=[];
         end
-        str=[str 'P: ' names{h==lineh}{pidx}];
+        if(iscell(names{h==lineh}))
+            str=[str 'P: ' names{h==lineh}{pidx}];
+        else
+            str=[str names{h==lineh}]
+        end
         
         % show text
         texth = text(bcoord(1),bcoord(2),str,...
