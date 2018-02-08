@@ -109,12 +109,12 @@ set(flagorfig,'InvertHardcopy','off') % keep all other visual porperties
 % print command depending on output format
 switch format
     case 'pdf'
-        set(flagorfig,'color','none') % set trans background
+        set(flagorfig,'color','none','renderer','Painters') % set trans background
         hax=findobj(flagorfig,'type','axes');
         col=get(hax,'color'); if(isnumeric(col)),col={col};end
         set(hax(cellfun(@(x) isequal(x,[1 1 1]),col)),...
             'color','none');
-        print(flagorfig,[filnamwithoutext '.pdf'],'-dpdf')
+        print(flagorfig,[filnamwithoutext '.pdf'],'-dpdf','-r0')
     case 'png'
         set(flagorfig,'color','w') % set white background
         print(flagorfig,[filnamwithoutext '.png'],'-dpng','-r300')
@@ -144,7 +144,7 @@ set(flagorfig,'color',figprop.Color)
 set(flagorfig,'InvertHardcopy',figprop.InvertHardcopy)
 
 disp(['SCREENSHOT SAVED : ' filnamwithoutext])
-
+return
 % add tag (if imagemagick installed)
 stack=dbstack(1);
 if(~isempty(stack) && strcmp('png',format))
