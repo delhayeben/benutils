@@ -10,11 +10,11 @@
 % rc is the number of rows and columns of the subplot
 %     if ax was created with subplot_ax function, rc is optional
 %
-% ['gap',value] is an arbitrary spacing between subplot
+% ['gap',value] is an arbitrary spacing between subplot (norm to fig size)
 %   if gap is scalar, the same horizontal and vertical spacing is applied
 %   if gap is a vector, [horiz vert] gap is applied
 %
-% ['margins',value] are the outer margins
+% ['margins',value] are the outer margins (norm to fig size)
 %   if margings is scalar, the margins on all sides
 %   if margins is a 2-el vector, [horiz vert] margins are applied
 %   if margins is a 4-el vector, [left bottom right top] margins are applied
@@ -22,20 +22,25 @@
 % ['showboxes',logical] shows the outer limits of each subplot
 %   in black before and in red after tightsubplot adjusted the values
 %
+% ['remticklab',value] remove tick labels that are repetead 
+%                        (i.e. not on left column or bottom line)
+%   if remticklab is a scalar, it applies to x and y labels
+%   if remticklab is a 2-el vector, it applies respectively to x and y
+%
 
 function tightsubplot(ax,varargin)
 if(~isempty(varargin) && isnumeric(varargin{1}))
     rc=varargin{1};
     varargin=varargin(2:end);
 else
-    rc=eval(get(ax(1),'Tag'));
+    rc=get(ax(1),'SubplotFormat');
 end
 
 p=inputParser;
-p.addParameter('gap',[0 0]);
-p.addParameter('margins',[0 0 0 0]);
+p.addParameter('gap',0);
+p.addParameter('margins',0);
 p.addParameter('showboxes',0);
-p.addParameter('remticklab',false);
+p.addParameter('remticklab',0);
 p.parse(varargin{:});
 
 gap=p.Results.gap;
@@ -50,12 +55,11 @@ ax=flipud(reshape(ax,rc([2 1]))');
 if(isscalar(gap)),          gap=[1 1]*gap;                  end
 if(isscalar(margins)),      margins=[1 1 1 1]*margins;      end
 if(length(margins)==2),     margins=margins([1 2 1 2]);     end
+if(isscalar(remticklab)),   remticklab=remticklab([1 1]);   end
 
 
-if(remticklab)
-    set(ax(:,2:end),'yticklabel',[])
-    set(ax(2:end,:),'xticklabel',[])
-end
+if(remticklab(1)), set(ax(2:end,:),'xticklabel',[]); end
+if(remticklab(2)), set(ax(:,2:end),'yticklabel',[]); end
 
 pos=arrayfun(@(x) get(x,'position'),ax,'uni',0);
 ins=arrayfun(@(x) get(x,'tightinset'),ax,'uni',0);
@@ -101,8 +105,9 @@ while(1)
     pos=arrayfun(@(x) get(x,'position'),ax,'uni',0);
     out=cellfun(@(x,y) x+[-y(1:2) y(1:2)+y(3:4)],pos,insnew,'uni',0);
     ins=insnew;
-    if(itnum==6)
+    if(itnum==10)
         disp('Could not converge to a stable and optimized arrangement')
+        break;
     end
 end
 

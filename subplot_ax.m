@@ -49,7 +49,11 @@ ax = column(gobjects(rows,columns));
 for ii = 1:(rows*columns)
     ax(ii) = subplot(rows,columns,ii);
 end
-set(ax,'Tag',['[' num2str(rows) ' ' num2str(columns) ']']);
+
+% tag subplot format
+hProp = addprop(ax(1),'SubplotFormat');
+set(ax(1),'SubplotFormat',[rows columns]);
+hProp.SetAccess = 'private';
 
 % set properties
 if(exist('varargin','var') && ~isempty(varargin))
