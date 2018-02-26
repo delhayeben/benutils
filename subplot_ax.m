@@ -4,7 +4,7 @@ function ax = subplot_ax(rows,columns,varargin)
 % input: rows: number of rows
 %        columns: number of columns
 %        varargin: pairs of parameters to "set" to all subplots
-%        
+%
 %        rows can also be used
 %          - as a two digit scalar: 44 is for 4 rows and 4 columns
 %          - as 2 two elements vector: first element is rows, sencond is
@@ -32,10 +32,10 @@ if(nargin==1 || ~isscalar(columns))
             error('Single argument: should have at least 1 row and 1 column')
         end
         columns=rem(rows,10);         rows=floor(rows/10);
-    % two element vector
+        % two element vector
     elseif(isvector(rows) && length(rows)==2)
         columns=rows(2);              rows=rows(1);
-    % otherwise throw error
+        % otherwise throw error
     else
         error('Rows should be either a scalar or a vector of 2 elements')
     end
@@ -51,11 +51,48 @@ for ii = 1:(rows*columns)
 end
 
 % tag subplot format
-hProp = addprop(ax(1),'SubplotFormat');
-set(ax(1),'SubplotFormat',[rows columns]);
-hProp.SetAccess = 'private';
+try
+    hProp = addprop(ax(1),'SubplotFormat');
+    set(ax(1),'SubplotFormat',[rows columns]);
+    hProp.SetAccess = 'private';
+catch
+    disp('something went wrong with the tags');
+end
+
 
 % set properties
 if(exist('varargin','var') && ~isempty(varargin))
     set(ax,varargin{:})
 end
+
+% add double clic callback for tightsubplot
+hfig=ax.Parent;
+set(hfig,'WindowButtonDownFcn',@cliccb)
+
+    function cliccb(handle,~)
+        % if double click
+        if(strcmp(get(handle,'SelectionType'),'open'))
+            % check if double click is outside the axis
+            figunits=get(handle,'units'); set(handle,'units','norm')
+            xycur=get(handle,'CurrentPoint');
+            in=false;
+            for jj=1:length(ax)
+                pax=get(ax(jj),'pos');
+                xyax=[pax(1:2);pax(1:2)+[pax(3) 0];...
+                    pax(1:2)+[pax(3) pax(4)];pax(1:2)+[0 pax(4)]];
+                in=inpolygon(xycur(1),xycur(2),xyax(:,1),xyax(:,2));
+                if(in)
+                    set(handle,'units',figunits);
+                    return
+                end
+            end
+            % apply the tightsubplot function
+            tightsubplot(flipud(handle.Children))
+            set(handle,'units',figunits);
+        end
+    end
+
+end
+
+
+
