@@ -22,7 +22,7 @@
 % ['showboxes',logical] shows the outer limits of each subplot
 %   in black before and in red after tightsubplot adjusted the values
 %
-% ['remticklab',value] remove tick labels that are repetead 
+% ['remticklab',value] remove tick labels that are repetead
 %                        (i.e. not on left column or bottom line)
 %   if remticklab is a scalar, it applies to x and y labels
 %   if remticklab is a 2-el vector, it applies respectively to x and y
@@ -51,7 +51,7 @@ remticklab=p.Results.remticklab;
 % re-arrange it such that the matrix looks like the layout
 ax=flipud(reshape(ax,rc([2 1]))');
 
-% expand gap and margins 
+% expand gap and margins
 if(isscalar(gap)),          gap=[1 1]*gap;                  end
 if(isscalar(margins)),      margins=[1 1 1 1]*margins;      end
 if(length(margins)==2),     margins=margins([1 2 1 2]);     end
@@ -75,7 +75,7 @@ end
 % sometimes, tightinset value change when you change position value
 % iterate to converge to no change
 itnum=0;
-while(1) 
+while(1)
     itnum=itnum+1;
     % width
     Mx=max(cellfun(@(x) x(1)+x(3),out),[],1);
@@ -99,20 +99,28 @@ while(1)
     end
     
     insnew=arrayfun(@(x) get(x,'tightinset'),ax,'uni',0);
-    if(sum(column(abs(cat(1,ins{:})-cat(1,insnew{:}))))<.001)
-        break
-    end
     pos=arrayfun(@(x) get(x,'position'),ax,'uni',0);
     out=cellfun(@(x,y) x+[-y(1:2) y(1:2)+y(3:4)],pos,insnew,'uni',0);
-    ins=insnew;
+    
+    if(sum(column(abs(cat(1,ins{:})-cat(1,insnew{:}))))<.0001)
+        break
+    end
     if(itnum==10)
         disp('Could not converge to a stable and optimized arrangement')
         break;
     end
+    
+    ins=insnew;
+    
+    if(showboxes)
+        for ii=1:prod(rc)
+            val=out{ii};val(val<0)=0;val(val>1)=1;
+            annotation('rectangle',val,'color','g')
+        end
+    end
 end
 
 if(showboxes)
-    
     for ii=1:prod(rc)
         val=out{ii};val(val<0)=0;val(val>1)=1;
         annotation('rectangle',val,'color','r')

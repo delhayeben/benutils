@@ -69,6 +69,10 @@ end
 hfig=ax.Parent;
 set(hfig,'WindowButtonDownFcn',@cliccb)
 
+
+
+
+
     function cliccb(handle,~)
         % if double click
         if(strcmp(get(handle,'SelectionType'),'open'))
@@ -87,7 +91,7 @@ set(hfig,'WindowButtonDownFcn',@cliccb)
                 end
             end
             % apply the tightsubplot function
-            tightsubplot(flipud(handle.Children))
+            tightsubplot(ax)
             set(handle,'units',figunits);
         end
     end
