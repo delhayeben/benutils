@@ -17,9 +17,10 @@ publicationparam={
     'DefaultAxesLineWidth'          1
     'DefaultAxesTickLength'         [0.015 0.015]
     'DefaultAxesFontSize'           8
+    'DefaultTextFontSize'           8
     'DefaultAxesTitleFontSize'      1.2
     'DefaultAxesLabelFontSize'      1.2
-    'DefaultLineMarkerSize'         6
+    'DefaultLineMarkerSize'         15
     'Unit'             'centimeter'
     'Position'         [17 14 8.5 6.3]
     }';

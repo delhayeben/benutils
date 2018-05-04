@@ -16,15 +16,17 @@ if(~ishandle(ax))
     ax=gca;
 end
 
-xlabel(ax,varargin{1});
-ylabel(ax,varargin{2});
+for ii=1:length(ax)
+xlabel(ax(ii),varargin{1});
+ylabel(ax(ii),varargin{2});
 if(length(varargin)>2)
-    title(ax,varargin{3});
+    title(ax(ii),varargin{3});
 end
 if(length(varargin)>3)
     if(iscell(varargin{4}))
-        legend(ax,varargin{4}{:});
+        legend(ax(ii),varargin{4}{:});
     else
-        legend(ax,varargin{4});
+        legend(ax(ii),varargin{4});
     end
+end
 end

@@ -93,6 +93,20 @@ if(~ishandle(flagorfig))
     flagorfig=gcf;
 end
 
+% if file already exists, create a backup
+filewithext=[filnamwithoutext '.' format];
+if(exist(filewithext,'file'))
+    [filepath,name] = fileparts(filnamwithoutext);
+    backfolder=[filepath '/old/'];
+    if(~exist(backfolder,'dir'))
+        mkdir(backfolder)
+    end
+    a=dir([backfolder name '_*.' format]);
+    movefile(filewithext,[backfolder name '_' num2str(length(a)+1) '.' format])
+end
+
+
+
 % hide all uicontrols (in case of GUI's)
 uic=findobj(flagorfig,'type','UIControl');
 set(uic,'visible','off')
@@ -111,7 +125,7 @@ switch format
     case 'pdf'
         set(flagorfig,'color','none','renderer','Painters') % set trans background
         hax=findobj(flagorfig,'type','axes');
-        col=get(hax,'color'); if(isnumeric(col)),col={col};end
+        col=get(hax,'color'); if(isnumeric(col) || ischar(col)),col={col};end
         set(hax(cellfun(@(x) isequal(x,[1 1 1]),col)),...
             'color','none');
         print(flagorfig,[filnamwithoutext '.pdf'],'-dpdf','-r0')

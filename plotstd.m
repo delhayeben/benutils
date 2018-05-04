@@ -33,10 +33,23 @@ x=x(:);
 [ym,yv]=fun(y);
 
 % remove nan
-nanlines=sum(isnan([x,ym,yv]),2)>0;
+try
+    nanlines=sum(isnan([x,ym,yv]),2)>0;
+catch
+    size(x)
+    size(ym)
+    size(yv)
+    error('inconsistent sizes')
+end
+
 x=x(~nanlines);
 ym=ym(~nanlines);
 yv=yv(~nanlines);
+
+% deal with all nan
+if(isempty(x)), x=nan;end
+if(isempty(ym)), ym=nan;end
+if(isempty(yv)), yv=nan;end
 
 getstatus=get(ax,'nextplot');
 hh=plot(ax,x,ym,varargin{:});

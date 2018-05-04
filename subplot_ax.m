@@ -11,11 +11,6 @@ function ax = subplot_ax(rows,columns,varargin)
 %             columns
 %        in that case, the argument column is concatenated with varargin.
 
-% DO NOT PRE-ALLOCATE, in order to obtain handle objects in recent Matlab
-% version
-%ax = zeros(rows*columns,1);
-
-
 % handle inputs
 if(nargin==1 || ~isscalar(columns))
     % cat columns with varargin
@@ -44,20 +39,65 @@ if(rows<1 || columns<1)
     error('Subplots should have at least 1 row and 1 column')
 end
 
+% number of elements and their IDs
+nel=rows*columns;
+elid=num2cell(1:nel);
+
+% specific arguments [name,value] pair
+% MERGE (in construction)
+mergearg=find(strcmp('merge',varargin));
+if(~isempty(mergearg) && length(mergearg)==1)
+    el=reshape(1:rows*columns,columns,rows)';
+    mergecell=varargin{mergearg+1};
+    if(~iscell(mergecell))
+        mergecell={mergecell};
+    end
+    varargin(mergearg+(0:1))=[];
+    for ii=1:length(mergecell)
+        if(length(mergecell{ii})>1)
+            [i,j]=find(ismember(el,mergecell{ii}));
+            mergedel=el(min(i):max(i),min(j):max(j));
+            elid(mergedel(:))={mergedel(:)};
+        else
+            disp('no merge: no enough elements')
+        end
+    end
+else
+    mergecell=[];
+end
+
+% show each subplot index
+shownumarg=find(strcmp('shownum',varargin));
+if(~isempty(shownumarg) && length(shownumarg)==1)
+    shownum=varargin{shownumarg+1};
+    varargin(shownumarg+(0:1))=[];
+else
+    shownum=0;
+end
+
 % create subplot
-ax = column(gobjects(rows,columns));
-for ii = 1:(rows*columns)
-    ax(ii) = subplot(rows,columns,ii);
+ax = gobjects(nel,1);
+for ii = 1:nel
+    ax(ii) = subplot(rows,columns,elid{ii});
+    if(shownum)
+        pos=get(ax(ii),'pos');
+        annotation('textbox',pos,'String',num2str(ii),'edgecolor','none',...
+            'horiz','center','vert','middle');
+    end
 end
 
 % tag subplot format
-try
+% try
     hProp = addprop(ax(1),'SubplotFormat');
     set(ax(1),'SubplotFormat',[rows columns]);
     hProp.SetAccess = 'private';
-catch
-    disp('something went wrong with the tags');
-end
+    
+    hProp = addprop(ax(1),'SubplotMerge');
+    set(ax(1),'SubplotMerge',mergecell);
+    hProp.SetAccess = 'private';
+% catch
+%     disp('something went wrong with the tags');
+% end
 
 
 % set properties
@@ -66,11 +106,8 @@ if(exist('varargin','var') && ~isempty(varargin))
 end
 
 % add double clic callback for tightsubplot
-hfig=ax.Parent;
+hfig=ax(1).Parent;
 set(hfig,'WindowButtonDownFcn',@cliccb)
-
-
-
 
 
     function cliccb(handle,~)
