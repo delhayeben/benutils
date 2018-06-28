@@ -56,7 +56,7 @@ hh=plot(ax,x,ym,varargin{:});
 set(ax,'nextplot','add')
 
 patch([x ; flipud(x)],[ym+yv;flipud(ym-yv)],hh.Color,...
-   'edgecolor','none','FaceAlpha',.2,'parent',ax)
+   'edgecolor','none','FaceAlpha',.25,'parent',ax)
 set(ax,'nextplot',getstatus,'box','off')
 
 if(nargout==1)

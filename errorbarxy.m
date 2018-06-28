@@ -78,7 +78,7 @@ end
 
 set(ax,'colororderindex',currentcolidx)
 h3=plot(ax,[cx nan(size(cx))]',[cy nan(size(cy))]',ls,...
-    'markersize',16,varargin{:});
+    'markersize',14,varargin{:});
 set(ax,'nextplot',holdstatus)
 
 if(nargout>0)

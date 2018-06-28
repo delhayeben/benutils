@@ -157,7 +157,7 @@ set(flagorfig,'PaperSize',figprop.PaperSize)
 set(flagorfig,'color',figprop.Color)
 set(flagorfig,'InvertHardcopy',figprop.InvertHardcopy)
 
-disp(['SCREENSHOT SAVED : ' filnamwithoutext])
+disp(['SCREENSHOT SAVED : ' filnamwithoutext '.' format])
 return
 % add tag (if imagemagick installed)
 stack=dbstack(1);

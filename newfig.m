@@ -29,12 +29,15 @@ if(~exist('name','var') || isempty(name))
     name=num2str(round(rand*1e6));
 else
     disp(name)
-    old=findobj('name',name);
+    old=findobj('newfig_name',name);
     delete(old);
 end
 
 f=figure('name',name,publicationparam{:},varargin{:});
 
+hProp = addprop(f,'newfig_name');
+set(f,'newfig_name',name);
+hProp.SetAccess = 'private';
 
 if(nargout==1)
     ff=f;
