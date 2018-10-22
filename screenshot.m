@@ -105,8 +105,6 @@ if(exist(filewithext,'file'))
     movefile(filewithext,[backfolder name '_' num2str(length(a)+1) '.' format])
 end
 
-
-
 % hide all uicontrols (in case of GUI's)
 uic=findobj(flagorfig,'type','UIControl');
 set(uic,'visible','off')
@@ -134,14 +132,14 @@ switch format
         print(flagorfig,[filnamwithoutext '.png'],'-dpng','-r300')
         
         % if imagemagick installed, remove white background
-        [s,~]=system('where convert.exe');
-        if(~s)
-            file=[filnamwithoutext '.' format];
-            cmd=['convert ' filnamwithoutext ...
-                '.png -transparent white '...
-                filnamwithoutext  '.png'];
-            [~,~]=system(cmd);
-        end
+%         [s,~]=system('where convert.exe');
+%         if(~s)
+%             file=[filnamwithoutext '.' format];
+%             cmd=['convert ' filnamwithoutext ...
+%                 '.png -transparent white '...
+%                 filnamwithoutext  '.png'];
+%             [~,~]=system(cmd);
+%         end
         
     otherwise
         disp('unknown format, abord...');

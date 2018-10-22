@@ -98,7 +98,7 @@ if(spike_num)
 end
 % plot data
 for ii=1:colcount
-    plot(ax,xfull{ii},yfull{ii},'color',C(ii,:),'linewidth',lw);
+    line(ax,xfull{ii},yfull{ii},'color',C(ii,:),'linewidth',lw);
     hold(ax,'on');
     box(ax,'off')
 end
@@ -107,8 +107,8 @@ if ~(strcmp(holdfig,'on') || noffset~=0)
     hold(ax,'off');
 end
 
-xlabel(ax,'Time [s]')
-ylabel(ax,'Neuron #')
+%xlabel(ax,'Time [s]')
+%ylabel(ax,'Neuron #')
 
 if(~isempty(titlevar))
     title(ax,titlevar)
