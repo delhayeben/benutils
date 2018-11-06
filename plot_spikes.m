@@ -2,6 +2,13 @@
 
 function plot_spikes(varargin)
 
+if(ishandle(varargin{1}))
+    fh=varargin{1};
+    varargin(1)=[];
+else
+    fh=gca;
+end
+
 p=inputParser;
 p.addRequired('spikestimes'); % cell vector of spike times
 p.addParamValue('neuron_offset',0);   % scalar integer counting neuron offset
@@ -10,7 +17,7 @@ p.addParamValue('time_offset',0);   % time offset of the first spike
 p.addParamValue('time_scale',1);   % time scaling
 p.addParamValue('color',[0 0 0]); % either 1 color for all, or (#neurons,3)
 p.addParamValue('linewidth',1.6);  % bar linewidth
-p.addParamValue('parenthandle',gcf,@ishandle); % fig or axis
+p.addParamValue('parenthandle',fh); % fig or axis
 p.addParamValue('psth',0);    % show psth below (0=off, other=binning win duration in sec)
 p.addParamValue('rates','off'); % show mean rate on the right
 p.addParamValue('psd','off');   % show spike train spectrum

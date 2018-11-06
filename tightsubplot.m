@@ -72,7 +72,8 @@ if(~isempty(merge))
   mj=zeros(lm,2);
   for ii=1:lm
     [a,b]=find(ismember(el,merge{ii}));
-    mi(ii,:)=[min(a) max(a)];     mj(ii,:)=[min(b) max(b)];
+    mi(ii,:)=[min(a) max(a)];     
+    mj(ii,:)=[min(b) max(b)];
     % trick to convert index to matrix instead of layout
     midx{ii}=find(ismember(el,el(mi(ii,1):mi(ii,2),mj(ii,1):mj(ii,2))));
   end
@@ -90,12 +91,12 @@ end
 
 % sometimes, tightinset value change when you change position value
 % iterate to converge to no change
-itnum=8;
+itnum=0;
 while(1)
   itnum=itnum+1;
   % width gain
-  Mx=nanmax(cellfun(@(x) x(3),outlim),[],1); 
-  mx=nanmin(cellfun(@(x) x(1),outlim),[],1); 
+  Mx=nanmax(cellfun(@(x) x(3),outlim),[],1);
+  mx=nanmin(cellfun(@(x) x(1),outlim),[],1);
   Mx(isnan(Mx))=0;
   mx(isnan(mx))=0;
   xw=(1-sum(Mx-mx)-gap(1)*(rc(2)-1)-sum(margins([1 3])))/rc(2);
@@ -103,8 +104,8 @@ while(1)
   
   
   % height gain
-  My=nanmax(cellfun(@(x) x(4),outlim),[],2)'; 
-  my=nanmin(cellfun(@(x) x(2),outlim),[],2)'; 
+  My=nanmax(cellfun(@(x) x(4),outlim),[],2)';
+  my=nanmin(cellfun(@(x) x(2),outlim),[],2)';
   My(isnan(My))=0;
   my(isnan(my))=0;
   yw=(1-sum(My-my)-gap(2)*(rc(1)-1)-sum(margins([2 4])))/rc(1);
@@ -134,7 +135,7 @@ while(1)
       else
         val=[xw*(jj-1)-sum(xg(1:jj)) yw*(ii-1)-sum(yg(1:ii))...
           xw yw];
-        set(ax(ii,jj),'position',pos{ii,jj}+val);
+        set(ax(ii,jj),'position',pos{ii,jj}+val)
       end
     end
   end
