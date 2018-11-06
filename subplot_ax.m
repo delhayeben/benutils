@@ -39,40 +39,30 @@ if(rows<1 || columns<1)
   error('Subplots should have at least 1 row and 1 column')
 end
 
+% parse inputs
+[varargin,mergearg]=parseargpair(varargin,'merge',[]); % merge
+[varargin,shownum]=parseargpair(varargin,'shownum',0); % show subplot index
+
 % number of elements and their IDs
 nel=rows*columns;
 elid=num2cell(1:nel);
 
 % specific arguments [name,value] pair
 % MERGE (in construction)
-mergearg=find(strcmp('merge',varargin));
-if(~isempty(mergearg) && length(mergearg)==1)
+if(~isempty(mergearg))
   el=reshape(1:rows*columns,columns,rows)';
-  mergecell=varargin{mergearg+1};
-  if(~iscell(mergecell))
-    mergecell={mergecell};
+  if(~iscell(mergearg))
+    mergearg={mergearg};
   end
-  varargin(mergearg+(0:1))=[];
-  for ii=1:length(mergecell)
-    if(length(mergecell{ii})>1)
-      [i,j]=find(ismember(el,mergecell{ii}));
+  for ii=1:length(mergearg)
+    if(length(mergearg{ii})>1)
+      [i,j]=find(ismember(el,mergearg{ii}));
       mergedel=el(min(i):max(i),min(j):max(j));
       elid(mergedel(:))={mergedel(:)};
     else
       disp('no merge: no enough elements')
     end
   end
-else
-  mergecell=[];
-end
-
-% show each subplot index
-shownumarg=find(strcmp('shownum',varargin));
-if(~isempty(shownumarg) && length(shownumarg)==1)
-  shownum=varargin{shownumarg+1};
-  varargin(shownumarg+(0:1))=[];
-else
-  shownum=0;
 end
 
 % create subplot
@@ -93,7 +83,7 @@ try
   hProp.SetAccess = 'private';
   
   hProp = addprop(ax(1),'SubplotMerge');
-  set(ax(1),'SubplotMerge',mergecell);
+  set(ax(1),'SubplotMerge',mergearg);
   hProp.SetAccess = 'private';
 catch
   disp('something went wrong with the tags');

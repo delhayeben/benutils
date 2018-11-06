@@ -5,8 +5,8 @@ end
 nax=length(ax(:));
 
 args=varargin;
-[args,skipval]=extractparam(args,'skip',0);
-[args,offsetval]=extractparam(args,'offset',zeros(length(ax),2));
+[args,skipval]=parseargpair(args,'skip',0);
+[args,offsetval]=parseargpair(args,'offset',zeros(length(ax),2));
 
 % in case of merged cells (created with subplot_ax)
 if(isprop(ax(1),'SubplotMerge'))
@@ -38,18 +38,4 @@ for ii=1:length(ax)
       char(64+jj),'fontsize',16,'vert','bott',args{:})
   end
 end
-end
-
-function [outputs,argval]=extractparam(inputs,name,default)
-
-argnum=find(strcmp(name,inputs));
-if(~isempty(argnum) && length(argnum)==1)
-  argval=inputs{argnum+1};
-  inputs(argnum+(0:1))=[];
-else
-  argval=default;
-end
-
-outputs=inputs;
-
 end
