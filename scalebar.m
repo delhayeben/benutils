@@ -44,13 +44,13 @@ for ii=1:length(varargin)/4
     p=param{4};
     switch param{1}
         case 'x'
-            h(end+1)=plot(ax,xl(1)+xl(2)*p+[0 l],[yl(1) yl(1)],'k-','linew',2.5);
-            h(end+1)=text(xl(1)+xl(2)*p,yl(1),t,'horiz','left',...
+            h(end+1)=plot(ax,xl(1)+xl(2)*p+[0 l],[yl(1) yl(1)],'k-','linew',1.5);
+            h(end+1)=text(xl(1)+xl(2)*p+l/2,yl(1),t,'horiz','cen',...
                 'vert','top','par',ax,prop{:});
             set(ax,'xcolor','none')
         case 'y'
-            h(end+1)=plot(ax,[xl(1) xl(1)],yl(1)+yl(2)*p+[0 l],'k-','linew',2.5);
-            h(end+1)=text(xl(1),yl(1)+yl(2)*p,t,'horiz','left',...
+            h(end+1)=plot(ax,[xl(1) xl(1)],yl(1)+yl(2)*p+[0 l],'k-','linew',1.5);
+            h(end+1)=text(xl(1),yl(1)+yl(2)*p+l/2,t,'horiz','cen',...
                 'rot',90,'vert','bottom','par',ax,prop{:});
             set(ax,'ycolor','none')
         otherwise

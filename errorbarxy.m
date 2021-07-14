@@ -16,7 +16,7 @@
 
 function h=errorbarxy(varargin)
 
-if(ishandle(varargin{1})& length(varargin{1})==1)
+if(ishandle(varargin{1})&& length(varargin{1})==1)
     ax=varargin{1}; varargin(1)=[];
 else
     ax=gca;
@@ -30,27 +30,9 @@ if(mod(length(varargin),2)~=0)
     error('invalid argument pairs')
 end
 
-
-idxc=find(strcmp(varargin,'cfun'),1);
-if(idxc)
-    cfun=varargin{idxc+1}; varargin(idxc:idxc+1)=[];
-else
-    cfun=@(x) nanmean(x,2);
-end
-
-idxv=find(strcmp(varargin,'vfun'),1);
-if(idxv)
-    vfun=varargin{idxv+1}; varargin(idxv:idxv+1)=[];
-else
-    vfun=@(x) nanstd(x,0,2);
-end
-
-idxv=find(strcmp(varargin,'ls'),1);
-if(idxv)
-    ls=varargin{idxv+1}; varargin(idxv:idxv+1)=[];
-else
-    ls='.';
-end
+[cfun,varargin]=parseargpair(varargin,'cfun',@(x) nanmean(x,2));
+[vfun,varargin]=parseargpair(varargin,'vfun',@(x) nanstd(x,0,2));
+[ls,varargin]=parseargpair(varargin,'ls','.');
 
 cx=cfun(x);
 cy=cfun(y);

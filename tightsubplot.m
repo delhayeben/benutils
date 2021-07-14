@@ -28,7 +28,7 @@ function tightsubplot(ax,varargin)
 %   if remticklab is a scalar, it applies to x and y labels
 %   if remticklab is a 2-el vector, it applies respectively to x and y
 %
-
+drawnow
 
 if(~isempty(varargin) && isnumeric(varargin{1}))
   rc=varargin{1};
@@ -64,6 +64,9 @@ if(isscalar(remticklab)),   remticklab=remticklab([1 1]);   end
 if(remticklab(1)), set(ax(2:end,:),'xticklabel',[]); end
 if(remticklab(2)), set(ax(:,2:end),'yticklabel',[]); end
 
+if(remticklab(1)), set(ax(2:end,:),'xticklabel',[]); end
+if(remticklab(2)), set(ax(:,2:end),'yticklabel',[]); end
+
 if(~isempty(merge))
   el=flipud(reshape(1:prod(rc),rc(2),rc(1))');
   lm=length(merge);
@@ -95,8 +98,8 @@ itnum=0;
 while(1)
   itnum=itnum+1;
   % width gain
-  Mx=nanmax(cellfun(@(x) x(3),outlim),[],1);
-  mx=nanmin(cellfun(@(x) x(1),outlim),[],1);
+  Mx=max(cellfun(@(x) x(3),outlim),[],1);
+  mx=min(cellfun(@(x) x(1),outlim),[],1);
   Mx(isnan(Mx))=0;
   mx(isnan(mx))=0;
   xw=(1-sum(Mx-mx)-gap(1)*(rc(2)-1)-sum(margins([1 3])))/rc(2);
@@ -104,8 +107,8 @@ while(1)
   
   
   % height gain
-  My=nanmax(cellfun(@(x) x(4),outlim),[],2)';
-  my=nanmin(cellfun(@(x) x(2),outlim),[],2)';
+  My=max(cellfun(@(x) x(4),outlim),[],2)';
+  my=min(cellfun(@(x) x(2),outlim),[],2)';
   My(isnan(My))=0;
   my(isnan(my))=0;
   yw=(1-sum(My-my)-gap(2)*(rc(1)-1)-sum(margins([2 4])))/rc(1);

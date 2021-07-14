@@ -8,12 +8,12 @@
 % ['param',value] lets you set param-value pairs to the figure according to
 %                   the figure properties
 
-function ff=newfig(name,varargin)
+function [ff,aa]=newfig(name,varargin)
 
 publicationparam={
     'DefaultAxesTickDirMode'        'manual'
     'DefaultAxesTickDir'            'out'
-    'DefaultLineLineWidth'          1.5
+    'DefaultLineLineWidth'          1
     'DefaultAxesLineWidth'          1
     'DefaultAxesTickLength'         [0.015 0.015]
     'DefaultAxesFontSize'           8
@@ -28,17 +28,25 @@ publicationparam={
 if(~exist('name','var') || isempty(name))
     name=num2str(round(rand*1e6));
 else
-    disp(name)
+    cprintf('_comments','%s\n',name)
     old=findobj('newfig_name',name);
     delete(old);
 end
 
+[subplt,varargin]=parseargpair(varargin,'subplot',[]);
+
 f=figure('name',name,publicationparam{:},varargin{:});
+if(~isempty(subplt))
+  ax=subplot_ax(subplt);
+end
 
 hProp = addprop(f,'newfig_name');
 set(f,'newfig_name',name);
 hProp.SetAccess = 'private';
 
-if(nargout==1)
+if(nargout>0)
     ff=f;
+    if(~isempty(subplt))
+      aa=ax;
+    end
 end

@@ -1,4 +1,4 @@
-function [cvrmse, error]=loocv(X,y,lambda)
+function [cvrmse, err,coefLS]=loocv(X,y,lambda)
 
 [n,p]=size(X);
 % lambda is for ridge regression
@@ -12,11 +12,11 @@ end
 [Q, R] = qr(X,0);
 E = X/R;
 
-% loocv
-yh=X*(R\(Q'*y)); % LS estimate
+coefLS=R\(Q'*y);
+yh=X*coefLS; % LS estimate
 l=sum(E.*E,2); % leverage
 
-
-error=(y(1:n) - yh(1:n))./(1-l(1:n));
-cvrmse = sqrt(nanmean((error(1:n)).^2));
+% loocv
+err=(y(1:n) - yh(1:n))./(1-l(1:n));
+cvrmse = sqrt(nanmean((err(1:n)).^2));
 

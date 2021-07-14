@@ -4,10 +4,10 @@ function out = iif(cond,ctrue,cfalse)
 
 if isscalar(cond)
   if cond
-    out = ctrue();
+    out = ctrue; % previously ctrue();
   else
-    out = cfalse();
+    out = cfalse; % previously cfalse(); to avoid to evaluate if not needed
   end
 else
-  out = (cond).*ctrue() + (~cond).*cfalse();
+  out = (cond).*ctrue + (~cond).*cfalse; % same for ctrue and cfalse
 end

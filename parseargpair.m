@@ -1,13 +1,13 @@
-function [outputs,argval]=parseargpair(inputs,name,default)
+function [argval,outputs]=parseargpair(inputs,name,default)
 
 if(nargin<3 || ~exist('default','var'))
   default=[];
 end
 
 argnum=find(strcmp(name,inputs));
-if(~isempty(argnum) && length(argnum)==1)
-  argval=inputs{argnum+1};
-  inputs(argnum+(0:1))=[];
+if(~isempty(argnum))
+  argval=inputs{argnum(1)+1};
+  inputs(argnum(1)+(0:1))=[];
 else
   argval=default;
 end

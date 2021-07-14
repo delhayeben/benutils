@@ -50,6 +50,7 @@ tableformat=[repmat(...
     sprintf('|p{%2.3f\\linewidth}',(.8/ncols)),1,ncols) '|'];
 
 % write latex file
+
 outfile = fopen(filename,'w');
 % packages
 fprintf(outfile,'\\documentclass{article}\r\n');

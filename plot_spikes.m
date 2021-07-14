@@ -2,7 +2,7 @@
 
 function plot_spikes(varargin)
 
-if(ishandle(varargin{1}))
+if(numel(varargin{1})==1 && all(all(ishandle(varargin{1}))))
     fh=varargin{1};
     varargin(1)=[];
 else
@@ -16,7 +16,7 @@ p.addParamValue('neuron_scale',1);   % y axis scaling
 p.addParamValue('time_offset',0);   % time offset of the first spike
 p.addParamValue('time_scale',1);   % time scaling
 p.addParamValue('color',[0 0 0]); % either 1 color for all, or (#neurons,3)
-p.addParamValue('linewidth',1.6);  % bar linewidth
+p.addParamValue('linewidth',1.2);  % bar linewidth
 p.addParamValue('parenthandle',fh); % fig or axis
 p.addParamValue('psth',0);    % show psth below (0=off, other=binning win duration in sec)
 p.addParamValue('rates','off'); % show mean rate on the right
@@ -61,7 +61,16 @@ else
 end
 
 if(isnumeric(spikestimes))
+  if any(size(spikestimes)==1) && length(unique(spikestimes))>2
     spikestimes={spikestimes};
+  else
+    n=size(spikestimes,2);
+    back=spikestimes;
+    spikestimes=cell(n,1);
+    for ii=1:n
+      spikestimes{ii}=find(back(:,ii)==1);
+    end
+  end
 end
 
 neurcount=length(spikestimes);
@@ -92,7 +101,7 @@ for ii=1:neurcount
     end
     s=size(spikes);
     xlin=[spikes; spikes; nan(s)];  xlin=xlin(:)+toffset;
-    ylin=[zeros(s)+.02; zeros(s)+.98; nan(s)]; ylin=(ylin(:)+ii-1+noffset)*nscale;
+    ylin=[zeros(s)+.05; zeros(s)+.95; nan(s)]; ylin=(ylin(:)+ii-1+noffset)*nscale;
     
     xfull{ic(ii)}=[xfull{ic(ii)};xlin];
     yfull{ic(ii)}=[yfull{ic(ii)};ylin];
@@ -103,6 +112,7 @@ end
 if(spike_num)
     fprintf('\n')
 end
+
 % plot data
 for ii=1:colcount
     line(ax,xfull{ii},yfull{ii},'color',C(ii,:),'linewidth',lw);
@@ -168,4 +178,4 @@ if(strcmp(psd,'on'))
     hold off; box off
 end
 
-axes(ax)
+

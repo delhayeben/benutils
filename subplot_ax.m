@@ -10,6 +10,10 @@ function ax = subplot_ax(rows,columns,varargin)
 %          - as 2 two elements vector: first element is rows, sencond is
 %             columns
 %        in that case, the argument column is concatenated with varargin.
+if(nargin==0)
+  rows=15;
+  columns=15;
+end
 
 % handle inputs
 if(nargin==1 || ~isscalar(columns))
@@ -40,8 +44,9 @@ if(rows<1 || columns<1)
 end
 
 % parse inputs
-[varargin,mergearg]=parseargpair(varargin,'merge',[]); % merge
-[varargin,shownum]=parseargpair(varargin,'shownum',0); % show subplot index
+[mergearg,varargin]=parseargpair(varargin,'merge',[]); % merge
+[shownum,varargin]=parseargpair(varargin,'shownum',0); % show subplot index
+[polar,varargin]=parseargpair(varargin,'polar',0); % show subplot index
 
 % number of elements and their IDs
 nel=rows*columns;
@@ -67,8 +72,15 @@ end
 
 % create subplot
 ax = gobjects(nel,1);
+if isscalar(polar)
+  polar=repmat(polar,nel,1);
+end
 for ii = 1:nel
-  ax(ii) = subplot(rows,columns,elid{ii});
+  if ~polar(ii)
+    ax(ii) = subplot(rows,columns,elid{ii});
+  else
+    ax(ii) = subplot(rows,columns,elid{ii},polaraxes);
+  end
   if(shownum)
     pos=get(ax(ii),'pos');
     annotation('textbox',pos,'String',num2str(ii),'edgecolor','none',...
@@ -106,7 +118,6 @@ set(hfig,'WindowButtonDownFcn',@cliccb)
       % check if double click is outside the axis
       figunits=get(handle,'units'); set(handle,'units','norm')
       xycur=get(handle,'CurrentPoint');
-      in=false;
       for jj=1:length(ax)
         pax=get(ax(jj),'pos');
         xyax=[pax(1:2);pax(1:2)+[pax(3) 0];...
