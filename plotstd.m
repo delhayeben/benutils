@@ -67,9 +67,11 @@ hh=plot(ax,x,ym,varargin{:});
 
 if(~zerovar)
   set(ax,'nextplot','add')
-  fill([x ; flipud(x)],[ym+yv;flipud(ym-yv)],hh.Color,...
-    'edgecolor','none','FaceAlpha',.25,'parent',ax)
-  set(ax,'nextplot',getstatus,'box','off')
+  colid=get(ax,'colororderindex');
+  h1=fill([x ; flipud(x)],[ym+yv;flipud(ym-yv)],hh.Color,...
+    'edgecolor','none','FaceAlpha',.25,'parent',ax);
+  h1.Annotation.LegendInformation.IconDisplayStyle = 'off';
+  set(ax,'nextplot',getstatus,'box','off','colororderindex',colid)
   try
     uistack(hh,'top')
   end

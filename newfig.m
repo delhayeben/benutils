@@ -20,7 +20,7 @@ publicationparam={
     'DefaultTextFontSize'           8
     'DefaultAxesTitleFontSize'      1.2
     'DefaultAxesLabelFontSize'      1.2
-    'DefaultLineMarkerSize'         15
+    'DefaultLineMarkerSize'         16
     'Unit'             'centimeter'
     'Position'         [17 14 8.5 6.3]
     }';
