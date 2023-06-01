@@ -34,19 +34,22 @@ else
 end
 
 [subplt,varargin]=parseargpair(varargin,'subplot',[]);
-
+[width,varargin]=parseargpair(varargin,'width',[]);
 f=figure('name',name,publicationparam{:},varargin{:});
-if(~isempty(subplt))
-  ax=subplot_ax(subplt);
+if(~isempty(subplt)),   ax=subplot_ax(subplt);end
+if(~isempty(width))
+  switch width
+    case 'single',       set(f,'position',[17 14 8.5 6.3]);
+    case 'oneandhalf',   set(f,'position',[17 14 11.5 9]);
+    case 'double',       set(f,'position',[17 14 18 10]);
+    otherwise,          disp('unknown width')
+  end
 end
 
 hProp = addprop(f,'newfig_name');
 set(f,'newfig_name',name);
 hProp.SetAccess = 'private';
-
 if(nargout>0)
     ff=f;
-    if(~isempty(subplt))
-      aa=ax;
-    end
+    if(~isempty(subplt)),       aa=ax;    end
 end

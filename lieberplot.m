@@ -75,7 +75,9 @@ end
 % the plot itself
 holdstatus=get(ax,'nextplot');
 if(bar_on)
-  bar(ax,x,fun(y),bar_width,'facecolor',bar_color)
+  hb=bar(ax,x,fun(y),bar_width,'facecolor',bar_color);
+  hb.Annotation.LegendInformation.IconDisplayStyle = 'off';
+  set(ax,'colororderindex',1)
   set(ax,'nextplot','add');
 end
 if link_on

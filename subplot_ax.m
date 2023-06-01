@@ -47,6 +47,7 @@ end
 [mergearg,varargin]=parseargpair(varargin,'merge',[]); % merge
 [shownum,varargin]=parseargpair(varargin,'shownum',0); % show subplot index
 [polar,varargin]=parseargpair(varargin,'polar',0); % show subplot index
+[holdarg,varargin]=parseargpair(varargin,'hold',0); % show subplot index
 
 % number of elements and their IDs
 nel=rows*columns;
@@ -101,6 +102,8 @@ catch
   disp('something went wrong with the tags');
 end
 
+% if hold
+if holdarg, set(ax,'nextplot','add'); end
 
 % set properties
 if(exist('varargin','var') && ~isempty(varargin))

@@ -50,7 +50,7 @@ if(nargout>0), hh=h; end
     if(iscell(names{h==lineh}))
       str=[str 'P: ' names{h==lineh}{pidx}];
     else
-      str=[str names{h==lineh}]
+      str=[str names{h==lineh}];
     end
     
     % show text
